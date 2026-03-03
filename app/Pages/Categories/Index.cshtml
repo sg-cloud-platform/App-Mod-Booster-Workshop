@@ -1,0 +1,54 @@
+@page
+@model ExpenseApp.Pages.Categories.IndexModel
+@{
+    ViewData["Title"] = "Categories";
+    ViewData["AppError"] = Model.Error;
+}
+
+<div class="top-bar">
+    <h5 class="mb-0 fw-bold">🏷️ Categories</h5>
+    <a asp-page="Create" class="btn btn-primary btn-sm">+ New Category</a>
+</div>
+
+<div class="card">
+    <div class="card-header">@Model.Categories.Count categor@(Model.Categories.Count == 1 ? "y" : "ies")</div>
+    <div class="card-body p-0">
+        <table class="table table-hover mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var c in Model.Categories)
+                {
+                    <tr>
+                        <td class="text-muted small">@c.CategoryId</td>
+                        <td class="fw-semibold">@c.CategoryName</td>
+                        <td>
+                            @if (c.IsActive)
+                            {
+                                <span class="badge bg-success">Active</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">Inactive</span>
+                            }
+                        </td>
+                        <td>
+                            <a asp-page="Edit" asp-route-id="@c.CategoryId" class="btn btn-sm btn-outline-primary">Edit</a>
+                            <a asp-page="Delete" asp-route-id="@c.CategoryId" class="btn btn-sm btn-outline-danger ms-1">Deactivate</a>
+                        </td>
+                    </tr>
+                }
+                @if (!Model.Categories.Any())
+                {
+                    <tr><td colspan="4" class="text-center py-4 text-muted">No categories found</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

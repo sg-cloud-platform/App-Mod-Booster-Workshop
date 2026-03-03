@@ -1,0 +1,65 @@
+@page
+@model ExpenseApp.Pages.Expenses.CreateModel
+@{
+    ViewData["Title"] = "New Expense";
+    ViewData["AppError"] = Model.Error;
+}
+
+<div class="top-bar">
+    <h5 class="mb-0 fw-bold">+ New Expense</h5>
+    <a asp-page="Index" class="btn btn-outline-secondary btn-sm">← Back</a>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-7">
+        <div class="card">
+            <div class="card-header">Expense Details</div>
+            <div class="card-body">
+                <form method="post">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Employee *</label>
+                        <select asp-for="Input.UserId" asp-items="Model.UserOptions" class="form-select">
+                            <option value="">Select employee...</option>
+                        </select>
+                        <span asp-validation-for="Input.UserId" class="text-danger small"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Category *</label>
+                        <select asp-for="Input.CategoryId" asp-items="Model.CategoryOptions" class="form-select">
+                            <option value="">Select category...</option>
+                        </select>
+                        <span asp-validation-for="Input.CategoryId" class="text-danger small"></span>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Amount (£) *</label>
+                            <input asp-for="Input.AmountGBP" type="number" step="0.01" min="0" class="form-control" placeholder="0.00" />
+                            <span asp-validation-for="Input.AmountGBP" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Date *</label>
+                            <input asp-for="Input.ExpenseDate" type="date" class="form-control" />
+                            <span asp-validation-for="Input.ExpenseDate" class="text-danger small"></span>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Description</label>
+                        <textarea asp-for="Input.Description" rows="3" class="form-control" placeholder="Provide details about this expense..."></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Receipt Reference</label>
+                        <input asp-for="Input.ReceiptFile" class="form-control" placeholder="/receipts/example.jpg" />
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">Status</label>
+                        <select asp-for="Input.StatusId" asp-items="Model.StatusOptions" class="form-select"></select>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">Save Expense</button>
+                        <a asp-page="Index" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
