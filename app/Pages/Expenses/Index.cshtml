@@ -1,0 +1,90 @@
+@page
+@model ExpenseApp.Pages.Expenses.IndexModel
+@{
+    ViewData["Title"] = "Expenses";
+    ViewData["AppError"] = Model.Error;
+}
+
+<div class="top-bar">
+    <h5 class="mb-0 fw-bold">💸 Expenses</h5>
+    <a asp-page="Create" class="btn btn-primary btn-sm">+ New Expense</a>
+</div>
+
+<!-- Filters -->
+<div class="card mb-3">
+    <div class="card-body py-2">
+        <form method="get" class="row g-2 align-items-end">
+            <div class="col-md-3">
+                <label class="form-label small fw-semibold">Status</label>
+                <select name="statusId" class="form-select form-select-sm" asp-items="Model.StatusOptions">
+                    <option value="">All Statuses</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label small fw-semibold">Employee</label>
+                <select name="userId" class="form-select form-select-sm" asp-items="Model.UserOptions">
+                    <option value="">All Employees</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label small fw-semibold">Category</label>
+                <select name="categoryId" class="form-select form-select-sm" asp-items="Model.CategoryOptions">
+                    <option value="">All Categories</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <button type="submit" class="btn btn-primary btn-sm w-100">Filter</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">@Model.Expenses.Count expense(s) found</div>
+    <div class="card-body p-0">
+        <table class="table table-hover mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>#</th>
+                    <th>Employee</th>
+                    <th>Category</th>
+                    <th>Date</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Description</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var e in Model.Expenses)
+                {
+                    <tr>
+                        <td class="text-muted small">@e.ExpenseId</td>
+                        <td>@e.UserName</td>
+                        <td><span class="badge bg-light text-dark">@e.CategoryName</span></td>
+                        <td>@e.ExpenseDate.ToString("dd MMM yyyy")</td>
+                        <td class="fw-semibold">£@e.AmountGBP.ToString("N2")</td>
+                        <td><span class="badge badge-@e.StatusName?.ToLower()">@e.StatusName</span></td>
+                        <td class="text-muted small" style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">@e.Description</td>
+                        <td>
+                            <a asp-page="Details" asp-route-id="@e.ExpenseId" class="btn btn-sm btn-outline-secondary">View</a>
+                            @if (e.StatusName == "Draft")
+                            {
+                                <a asp-page="Edit" asp-route-id="@e.ExpenseId" class="btn btn-sm btn-outline-primary ms-1">Edit</a>
+                                <a asp-page="Delete" asp-route-id="@e.ExpenseId" class="btn btn-sm btn-outline-danger ms-1">Delete</a>
+                            }
+                            @if (e.StatusName == "Submitted")
+                            {
+                                <a asp-page="Review" asp-route-id="@e.ExpenseId" class="btn btn-sm btn-outline-success ms-1">Review</a>
+                            }
+                        </td>
+                    </tr>
+                }
+                @if (!Model.Expenses.Any())
+                {
+                    <tr><td colspan="8" class="text-center py-4 text-muted">No expenses found</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

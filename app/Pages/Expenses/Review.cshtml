@@ -1,0 +1,62 @@
+@page "{id:int}"
+@model ExpenseApp.Pages.Expenses.ReviewModel
+@{
+    ViewData["Title"] = "Review Expense";
+    ViewData["AppError"] = Model.Error;
+}
+
+<div class="top-bar">
+    <h5 class="mb-0 fw-bold">Review Expense #@Model.Expense?.ExpenseId</h5>
+    <a asp-page="Index" class="btn btn-outline-secondary btn-sm">← Back</a>
+</div>
+
+@if (Model.Expense == null)
+{
+    <div class="alert alert-warning">Expense not found.</div>
+}
+else
+{
+    <div class="row justify-content-center">
+        <div class="col-md-7">
+            <div class="card mb-3">
+                <div class="card-header">Expense Summary</div>
+                <div class="card-body">
+                    <dl class="row mb-0">
+                        <dt class="col-sm-4">Employee</dt>
+                        <dd class="col-sm-8">@Model.Expense.UserName</dd>
+                        <dt class="col-sm-4">Category</dt>
+                        <dd class="col-sm-8">@Model.Expense.CategoryName</dd>
+                        <dt class="col-sm-4">Amount</dt>
+                        <dd class="col-sm-8 fw-bold text-primary">£@Model.Expense.AmountGBP.ToString("N2")</dd>
+                        <dt class="col-sm-4">Date</dt>
+                        <dd class="col-sm-8">@Model.Expense.ExpenseDate.ToString("dd MMMM yyyy")</dd>
+                        <dt class="col-sm-4">Description</dt>
+                        <dd class="col-sm-8">@Model.Expense.Description</dd>
+                        <dt class="col-sm-4">Submitted</dt>
+                        <dd class="col-sm-8">@Model.Expense.SubmittedAt?.ToString("dd MMM yyyy HH:mm")</dd>
+                    </dl>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">Manager Decision</div>
+                <div class="card-body">
+                    <form method="post">
+                        <input type="hidden" asp-for="Input.ExpenseId" />
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Reviewed By (Manager ID)</label>
+                            <select asp-for="Input.ReviewedBy" asp-items="Model.ManagerOptions" class="form-select">
+                                <option value="">Select manager...</option>
+                            </select>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button type="submit" name="action" value="approve" class="btn btn-success">✓ Approve</button>
+                            <button type="submit" name="action" value="reject" class="btn btn-danger">✗ Reject</button>
+                            <a asp-page="Index" class="btn btn-outline-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}

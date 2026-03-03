@@ -1,0 +1,34 @@
+@page "{id:int}"
+@model ExpenseApp.Pages.Categories.EditModel
+@{
+    ViewData["Title"] = "Edit Category";
+    ViewData["AppError"] = Model.Error;
+}
+
+<div class="top-bar">
+    <h5 class="mb-0 fw-bold">Edit Category</h5>
+    <a asp-page="Index" class="btn btn-outline-secondary btn-sm">← Back</a>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="card">
+            <div class="card-body">
+                <form method="post">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Name *</label>
+                        <input asp-for="Input.CategoryName" class="form-control" />
+                    </div>
+                    <div class="mb-4 form-check">
+                        <input asp-for="Input.IsActive" type="checkbox" class="form-check-input" />
+                        <label asp-for="Input.IsActive" class="form-check-label fw-semibold">Active</label>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">Save</button>
+                        <a asp-page="Index" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

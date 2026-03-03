@@ -1,0 +1,28 @@
+@page "{id:int}"
+@model ExpenseApp.Pages.Users.DeleteModel
+@{
+    ViewData["Title"] = "Deactivate User";
+}
+
+<div class="top-bar">
+    <h5 class="mb-0 fw-bold text-warning">Deactivate User</h5>
+    <a asp-page="Index" class="btn btn-outline-secondary btn-sm">← Back</a>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="card border-warning">
+            <div class="card-header bg-warning">Confirm Deactivation</div>
+            <div class="card-body">
+                <p>Deactivate user <strong>@Model.UserName</strong>? They will no longer appear in active user lists.</p>
+                <form method="post">
+                    <input type="hidden" name="id" value="@RouteData.Values["id"]" />
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-warning">Deactivate</button>
+                        <a asp-page="Index" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

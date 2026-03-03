@@ -1,0 +1,32 @@
+@page
+@model ExpenseApp.Pages.Categories.CreateModel
+@{
+    ViewData["Title"] = "New Category";
+    ViewData["AppError"] = Model.Error;
+}
+
+<div class="top-bar">
+    <h5 class="mb-0 fw-bold">+ New Category</h5>
+    <a asp-page="Index" class="btn btn-outline-secondary btn-sm">← Back</a>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="card">
+            <div class="card-header">Category Details</div>
+            <div class="card-body">
+                <form method="post">
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">Category Name *</label>
+                        <input asp-for="Input.CategoryName" class="form-control" placeholder="e.g. Entertainment" />
+                        <span asp-validation-for="Input.CategoryName" class="text-danger small"></span>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">Create</button>
+                        <a asp-page="Index" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

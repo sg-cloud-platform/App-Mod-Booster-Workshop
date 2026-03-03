@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Expense Manager</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8f9fc; }
+        .sidebar { width: 240px; min-height: 100vh; background: #1a1f36; position: fixed; top: 0; left: 0; padding-top: 20px; z-index: 100; }
+        .sidebar .brand { color: #fff; font-size: 1.2rem; font-weight: 700; padding: 10px 20px 20px; border-bottom: 1px solid #2d3561; }
+        .sidebar .nav-link { color: #a0a8c0; padding: 10px 20px; border-radius: 6px; margin: 2px 10px; font-size: 0.9rem; transition: all .2s; }
+        .sidebar .nav-link:hover, .sidebar .nav-link.active { background: #2d3561; color: #fff; }
+        .sidebar .nav-link i { width: 20px; margin-right: 8px; }
+        .main-content { margin-left: 240px; padding: 20px 30px; }
+        .top-bar { background: #fff; border-bottom: 1px solid #e8ecf0; padding: 12px 30px; margin: -20px -30px 20px; display: flex; align-items: center; justify-content: space-between; }
+        .card { border: none; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,.06); }
+        .card-header { background: #fff; border-bottom: 1px solid #f0f2f5; font-weight: 600; padding: 16px 20px; }
+        .btn-primary { background: #4f46e5; border-color: #4f46e5; }
+        .btn-primary:hover { background: #4338ca; border-color: #4338ca; }
+        .badge-draft { background: #f1f5f9; color: #64748b; }
+        .badge-submitted { background: #dbeafe; color: #2563eb; }
+        .badge-approved { background: #dcfce7; color: #16a34a; }
+        .badge-rejected { background: #fee2e2; color: #dc2626; }
+        .stat-card { border-radius: 12px; padding: 20px; color: #fff; }
+        .stat-card.draft { background: linear-gradient(135deg, #64748b, #94a3b8); }
+        .stat-card.submitted { background: linear-gradient(135deg, #3b82f6, #60a5fa); }
+        .stat-card.approved { background: linear-gradient(135deg, #10b981, #34d399); }
+        .stat-card.rejected { background: linear-gradient(135deg, #ef4444, #f87171); }
+        .table th { font-weight: 600; color: #6b7280; font-size: 0.8rem; text-transform: uppercase; letter-spacing: .05em; }
+        .table td { vertical-align: middle; }
+        .error-banner { background: #fef2f2; border-left: 4px solid #ef4444; padding: 12px 20px; margin-bottom: 16px; border-radius: 0 8px 8px 0; }
+        .chat-widget { position: fixed; bottom: 24px; right: 24px; z-index: 1000; }
+        .chat-btn { width: 56px; height: 56px; border-radius: 50%; background: #4f46e5; color: #fff; border: none; font-size: 1.4rem; box-shadow: 0 4px 12px rgba(79,70,229,.4); cursor: pointer; }
+        .form-control, .form-select { border-radius: 8px; border: 1px solid #e2e8f0; }
+        .form-control:focus, .form-select:focus { border-color: #4f46e5; box-shadow: 0 0 0 3px rgba(79,70,229,.1); }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="brand">💼 Expense Manager</div>
+        <nav class="nav flex-column mt-3">
+            <a class="nav-link @(ViewContext.RouteData.Values["page"]?.ToString() == "/Index" ? "active" : "")" asp-page="/Index">
+                📊 Dashboard
+            </a>
+            <a class="nav-link @(ViewContext.RouteData.Values["page"]?.ToString()?.StartsWith("/Expenses") == true ? "active" : "")" asp-page="/Expenses/Index">
+                💸 Expenses
+            </a>
+            <a class="nav-link @(ViewContext.RouteData.Values["page"]?.ToString()?.StartsWith("/Users") == true ? "active" : "")" asp-page="/Users/Index">
+                👥 Users
+            </a>
+            <a class="nav-link @(ViewContext.RouteData.Values["page"]?.ToString()?.StartsWith("/Categories") == true ? "active" : "")" asp-page="/Categories/Index">
+                🏷️ Categories
+            </a>
+            <hr style="border-color:#2d3561; margin: 10px;">
+            <a class="nav-link" href="/swagger" target="_blank">📖 API Docs</a>
+            <a class="nav-link" href="/Chat" id="chatNavLink">💬 Chat Assistant</a>
+        </nav>
+    </div>
+
+    <!-- Main content -->
+    <div class="main-content">
+        <!-- Error banner -->
+        @if (ViewData["AppError"] is ExpenseApp.Services.AppError err)
+        {
+            <div class="error-banner">
+                <strong>⚠️ Database Error</strong> in <code>@err.FileName</code> at line @err.LineNumber<br/>
+                <span class="text-danger">@err.Message</span>
+                @if (err.IsManagedIdentityError && err.ManagedIdentityFix != null)
+                {
+                    <div class="mt-2 text-secondary"><strong>Fix:</strong> @err.ManagedIdentityFix</div>
+                }
+                <small class="text-muted d-block mt-1">Showing demo data while the database connection is unavailable.</small>
+            </div>
+        }
+
+        @RenderBody()
+    </div>
+
+    <!-- Chat widget button -->
+    <div class="chat-widget">
+        <button class="chat-btn" onclick="toggleChat()" title="Open Chat Assistant">💬</button>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function toggleChat() { window.location.href = '/Chat'; }
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

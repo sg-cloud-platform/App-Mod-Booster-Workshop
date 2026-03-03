@@ -1,0 +1,25 @@
+# .NET
+[Bb]in/
+[Oo]bj/
+*.user
+*.suo
+.vs/
+publish/
+*.log
+
+# Node
+node_modules/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# NOTE: .zip files are NOT excluded so app.zip can be committed for deployment
+# *.zip  <-- intentionally NOT listed here
+
+# Secrets
+.env
+*.env.local

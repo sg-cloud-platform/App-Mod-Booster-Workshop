@@ -1,0 +1,35 @@
+@page "{id:int}"
+@model ExpenseApp.Pages.Expenses.DeleteModel
+@{
+    ViewData["Title"] = "Delete Expense";
+}
+
+<div class="top-bar">
+    <h5 class="mb-0 fw-bold text-danger">Delete Expense</h5>
+    <a asp-page="Index" class="btn btn-outline-secondary btn-sm">← Back</a>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="card border-danger">
+            <div class="card-header bg-danger text-white">Confirm Delete</div>
+            <div class="card-body">
+                <p>Are you sure you want to delete expense #@Model.Expense?.ExpenseId?</p>
+                @if (Model.Expense != null)
+                {
+                    <p class="text-muted">
+                        <strong>@Model.Expense.UserName</strong> - @Model.Expense.Description<br/>
+                        £@Model.Expense.AmountGBP.ToString("N2") on @Model.Expense.ExpenseDate.ToString("dd MMM yyyy")
+                    </p>
+                }
+                <form method="post">
+                    <input type="hidden" name="id" value="@Model.Expense?.ExpenseId" />
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                        <a asp-page="Index" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

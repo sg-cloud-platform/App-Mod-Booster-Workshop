@@ -1,0 +1,71 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Dashboard";
+    ViewData["AppError"] = Model.Error;
+}
+
+<div class="top-bar">
+    <h5 class="mb-0 fw-bold">📊 Dashboard</h5>
+    <a asp-page="/Expenses/Create" class="btn btn-primary btn-sm">+ New Expense</a>
+</div>
+
+<div class="row g-3 mb-4">
+    @foreach (var s in Model.Summary)
+    {
+        var cls = s.StatusName.ToLower();
+        <div class="col-md-3">
+            <div class="stat-card @cls">
+                <div class="h4 mb-0">@s.ExpenseCount</div>
+                <div class="small opacity-75">@s.StatusName expenses</div>
+                <div class="h6 mt-2 mb-0">£@s.TotalAmountGBP.ToString("N2")</div>
+            </div>
+        </div>
+    }
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span>Recent Expenses</span>
+                <a asp-page="/Expenses/Index" class="btn btn-outline-primary btn-sm">View All</a>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Employee</th>
+                            <th>Category</th>
+                            <th>Date</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var e in Model.RecentExpenses)
+                        {
+                            <tr>
+                                <td>@e.UserName</td>
+                                <td>@e.CategoryName</td>
+                                <td>@e.ExpenseDate.ToString("dd MMM yyyy")</td>
+                                <td>£@e.AmountGBP.ToString("N2")</td>
+                                <td>
+                                    <span class="badge badge-@e.StatusName?.ToLower()">@e.StatusName</span>
+                                </td>
+                                <td>
+                                    <a asp-page="/Expenses/Details" asp-route-id="@e.ExpenseId" class="btn btn-sm btn-outline-secondary">View</a>
+                                    @if (e.StatusName == "Submitted")
+                                    {
+                                        <a asp-page="/Expenses/Review" asp-route-id="@e.ExpenseId" class="btn btn-sm btn-outline-success ms-1">Review</a>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
